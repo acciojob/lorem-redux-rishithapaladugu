@@ -4,4 +4,4 @@ export default configureStore({
     reducer:{
         lorem: loremReducer
     }
-})
+});
