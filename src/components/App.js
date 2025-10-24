@@ -1,36 +1,21 @@
 import React, { useEffect } from "react";
-import './../styles/App.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchLorem } from './../state/loremSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLorem } from "../store/actions";
+import Loader from "./Loader";
+import LoremDisplay from "./LoremDisplay";
 
 const App = () => {
   const dispatch = useDispatch();
-  const { data, loading, error } = useSelector((state) => state.lorem);
+  const { loading, data, error } = useSelector((state) => state);
 
   useEffect(() => {
     dispatch(fetchLorem());
   }, [dispatch]);
 
-  return (
-    <div>
-      <h1>A short Naration of Lorem Ipsum</h1>
-      <h4>
-        Below Contains A title and Body gotten froma random API, Please take your time to Review
-      </h4>
+  if (loading) return <Loader />;
+  if (error) return <p>Error: {error}</p>;
 
-      {loading && <h4>Title :Loading tiltes</h4>}
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-
-      {!loading && !error && data && (
-        <ul>
-          <li>
-            <strong className="title">Title :{data.title}</strong>
-            <p className="body">Body :{data.body}</p>
-          </li>
-        </ul>
-      )}
-    </div>
-  );
+  return <LoremDisplay data={data} />;
 };
 
 export default App;
