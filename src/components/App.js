@@ -1,44 +1,38 @@
-import "./../styles/App.css";
-import React, { useEffect, useState } from "react";
+import "regenerator-runtime/runtime";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchPosts } from "./LoremSlice";
+import { fetchError, fetchStart, fetchSuccess } from "../actions/loremActions";
 
-const App = () => {
+function App() {
+  const { loading, data, error } = useSelector((state) => state);
   const dispatch = useDispatch();
-  const { posts, loading } = useSelector((state) => state.lorem);
-  const [showIntro, setShowIntro] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowIntro(false);
-      dispatch(fetchPosts());
-    }, 1000);
-    return () => clearTimeout(timer);
+    const fetchData = async () => {
+      dispatch(fetchStart());
+      try {
+        const response = await fetch("https://api.lorem.com/ipsum");
+        const result = await response.json();
+        dispatch(fetchSuccess(result));
+      } catch (err) {
+        dispatch(fetchError(err.message));
+      }
+    };
+    fetchData();
   }, [dispatch]);
 
   return (
-    <div className="app-container">
-      <h1>A short Naration of Lorem Ipsum</h1>
-
-      {showIntro ? (
+    <div>
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
+      {data && (
         <p>
-          Below Contains A title and Body gotten froma random API, Please take
-          your time to Review
+          <strong>{data.title}</strong> <br />
+          {data.body}
         </p>
-      ) : loading ? (
-        <h4>Loading...</h4>
-      ) : (
-        <ul>
-          {posts.map((post) => (
-            <li key={post.id}>
-              <h4 className="title">Title :{post.title}</h4>
-              <p className="body">Body :{post.body}</p>
-            </li>
-          ))}
-        </ul>
       )}
     </div>
   );
-};
+}
 
 export default App;
