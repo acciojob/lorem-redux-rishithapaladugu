@@ -1,19 +1,34 @@
-// action types
-export const FETCH_START = "FETCH_START";
-export const FETCH_SUCCESS = "FETCH_SUCCESS";
-export const FETCH_ERROR = "FETCH_ERROR";
+import axios from 'axios';
 
-// action creators
-export const fetchStart = () => ({
-  type: FETCH_START,
+export const FETCH_LOREM_REQUEST = 'FETCH_LOREM_REQUEST';
+export const FETCH_LOREM_SUCCESS = 'FETCH_LOREM_SUCCESS';
+export const FETCH_LOREM_FAILURE = 'FETCH_LOREM_FAILURE';
+
+export const fetchLoremRequest = () => ({
+    type: FETCH_LOREM_REQUEST,
 });
 
-export const fetchSuccess = (data) => ({
-  type: FETCH_SUCCESS,
-  payload: data,
+export const fetchLoremSuccess = (data) => ({
+    type: FETCH_LOREM_SUCCESS,
+    payload: data,
 });
 
-export const fetchError = (error) => ({
-  type: FETCH_ERROR,
-  payload: error,
+export const fetchLoremFailure = (error) => ({
+    type: FETCH_LOREM_FAILURE,
+    payload: error,
 });
+
+export const fetchLorem = () => {
+    return (dispatch) => {
+        dispatch(fetchLoremRequest());
+        axios
+            .get('https://api.lorem.com/ipsum')
+            .then((response) => {
+                const data = response.data;
+                dispatch(fetchLoremSuccess(data));
+            })
+            .catch((error) => {
+                dispatch(fetchLoremFailure(error.message));
+            });
+    };
+};
