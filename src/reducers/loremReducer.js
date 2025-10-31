@@ -1,22 +1,37 @@
-import { FETCH_START, FETCH_SUCCESS, FETCH_ERROR } from "../actions/loremActions";
+import {
+    FETCH_LOREM_REQUEST,
+    FETCH_LOREM_SUCCESS,
+    FETCH_LOREM_FAILURE
+} from '../actions/loremActions';
 
 const initialState = {
-  loading: false,
-  data: null,
-  error: null,
+    loading: false,
+    data: {},
+    error: '',
 };
 
-function loremReducer(state = initialState, action) {
-  switch (action.type) {
-    case FETCH_START:
-      return { ...state, loading: true, error: null };
-    case FETCH_SUCCESS:
-      return { ...state, loading: false, data: action.payload };
-    case FETCH_ERROR:
-      return { ...state, loading: false, error: action.payload };
-    default:
-      return state;
-  }
-}
+const loremReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case FETCH_LOREM_REQUEST:
+            return {
+                ...state,
+                loading: true,
+            };
+        case FETCH_LOREM_SUCCESS:
+            return {
+                loading: false,
+                data: action.payload,
+                error: '',
+            };
+        case FETCH_LOREM_FAILURE:
+            return {
+                loading: false,
+                data: {},
+                error: action.payload,
+            };
+        default:
+            return state;
+    }
+};
 
 export default loremReducer;
