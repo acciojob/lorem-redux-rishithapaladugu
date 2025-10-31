@@ -1,8 +1,6 @@
-import { configureStore } from "@reduxjs/toolkit";
-import loremReducer from "./LoremSlice";
+import { createStore } from "redux";
+import loremReducer from "../reducers/loremReducer";
 
-export const store = configureStore({
-  reducer: {
-    lorem: loremReducer,
-  },
-});
+const store = createStore(loremReducer);
+
+export default store;
